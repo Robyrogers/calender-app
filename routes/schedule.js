@@ -40,11 +40,68 @@ router.get("/:userId", async (req, res) => {
 	);
 });
 
-router.put("/:userId/add", () => {
+router.put("/add", async (req, res) => {
 	const { body } = req;
-	const { participants, from, to, subject } = body;
 
-	res.json();
+	let { participants, from, to, subject } = body;
+
+	if (
+		participants === undefined ||
+		from === undefined ||
+		to === undefined ||
+		subject === undefined
+	) {
+		return res.status(400).json({});
+	}
+
+	from = new Date(from);
+	to = new Date(to);
+
+	// The meeting start time cannot after or at the same time as the meeting end time
+	if (from.getTime() >= to.getTime()) {
+		return res.status(400).json({});
+	}
+
+	if (
+		participants.some(
+			(participant) => !users.some((user) => user.id === participant)
+		)
+	) {
+		return res.status(401).json({});
+	}
+
+	try {
+		const scheduleExists = await Schedule.findOne({
+			participants: { $in: participants },
+			$or: [
+				{ from: { $lte: from }, to: { $gte: to } },
+				{ from: { $lte: to }, to: { $gte: to } },
+				{ from: { $lte: from }, to: { $gte: from } },
+			],
+		});
+
+		if (scheduleExists) {
+			return res.status(400).json({});
+		}
+
+		const newSchedule = await Schedule.create({
+			subject,
+			participants,
+			from,
+			to,
+		});
+
+		return res.status(201).json({
+			id: newSchedule.id,
+			subject: newSchedule.subject,
+			participants: newSchedule.participants,
+			from: newSchedule.from,
+			to: newSchedule.to,
+		});
+	} catch (err) {
+		console.error(err);
+		return res.status(500).json({});
+	}
 });
 
 export default router;

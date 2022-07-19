@@ -17,7 +17,7 @@ router.get("/:userId", async (req, res) => {
 
 	// If the user does not exist
 	if (!user) {
-		return res.status(404).json([]);
+		return res.status(404).json({ message: "User does not exist!" });
 	}
 
 	const schedule = await Schedule.find({

@@ -114,6 +114,7 @@ router.put("/add", async (req, res) => {
 				{ from: { $lte: from }, to: { $gte: to } },
 				{ from: { $lte: to }, to: { $gte: to } },
 				{ from: { $lte: from }, to: { $gte: from } },
+				{ from: { $gte: from }, to: { $lte: to } },
 			],
 		});
 

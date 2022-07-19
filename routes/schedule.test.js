@@ -43,6 +43,6 @@ describe("Schedule API for a User", () => {
 	});
 
 	it("GET /schedule/:userId --> Empty array and 404 if no users matched", () => {
-		return request(app).get("/schedule/12314124").expect(404, []);
+		return request(app).get("/schedule/12314124").expect(404, { message: 'User does not exist!' });
 	});
 });

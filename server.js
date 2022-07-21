@@ -17,7 +17,7 @@ connectToDb(URI)
     .catch((err) => {
     console.error('Could not connect to the Database!')
     console.error(err);
-    process.exit(1);
+    process.kill(process.pid, 'SIGTERM');
 })
 
 // Gracefully close the server once all running processes end

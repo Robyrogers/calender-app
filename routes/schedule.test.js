@@ -1,7 +1,7 @@
 import "dotenv/config";
 import request from "supertest";
 import { app } from "../app.js";
-import { disconnectFromDb, connectToDb } from "../database/mongoDB.js";
+import { disconnectFromDb, connectToDb } from "../database/database.js";
 
 describe("Schedule API for a User", () => {
 	beforeAll(async () => await connectToDb(process.env.URI));

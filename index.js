@@ -14,7 +14,7 @@ app.get(
 	"/schedule/:user",
 	makeExpressCallback(ScheduleController.listScheduleByUser)
 );
-app.get("/schedule/add", makeExpressCallback(ScheduleController.addSchedule));
+app.post("/schedule/add", makeExpressCallback(ScheduleController.addSchedule));
 
 const PORT = process.env.PORT;
 
